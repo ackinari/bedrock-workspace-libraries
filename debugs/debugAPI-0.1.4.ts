@@ -8,7 +8,7 @@
  * @notice Licensed under the Open Productivity License (OPL)
  */
 
-import { Player, world, system, InputButton } from "@minecraft/server";
+import { InputButton, Player, system } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 
 export const Colors = {
@@ -546,7 +546,7 @@ export class DebugAPI {
         return densityMap;
     }
 
-    private static highlightJSON(obj: any, space = 4, palette: ColorPalette, braceConfig: BraceConfig): string {
+    static highlightJSON(obj: any, space = 4, palette: ColorPalette = this.DEFAULT_PALETTE, braceConfig: BraceConfig): string {
         let json = JSON.stringify(obj, null, space);
         if (braceConfig.hideFirstLast) {
             const lines = json.split('\n');
@@ -944,7 +944,7 @@ export class DebugAPI {
         const selectedLineText = lines[state.selectedLine].replace(this.COLOR_REGEX, "").trim();
         const modalForm = new ModalFormData().title("§eText Editor - Debug").textField("Edit line:", "Enter new content", { defaultValue: selectedLineText });
         try {
-            const response = await modalForm.show(player);
+            const response = await modalForm.show(player as any);
             if (response.canceled || !response.formValues) return false;
             const newText = response.formValues[0] as string;
             if (newText !== selectedLineText) {
